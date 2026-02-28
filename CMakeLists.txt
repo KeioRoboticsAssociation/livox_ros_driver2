@@ -249,12 +249,10 @@ else(ROS_EDITION STREQUAL "ROS2")
   )
 
   ## make sure the livox_lidar_sdk_shared library is installed
-  find_library(LIVOX_LIDAR_SDK_LIBRARY liblivox_lidar_sdk_shared.so /usr/local/lib REQUIRED)
-
-  ##
-  find_path(LIVOX_LIDAR_SDK_INCLUDE_DIR
-    NAMES "livox_lidar_api.h" "livox_lidar_def.h"
-    REQUIRED)
+  # find_library(LIVOX_LIDAR_SDK_LIBRARY liblivox_lidar_sdk_shared.so /usr/local/lib REQUIRED)
+  find_package(livox_sdk2 REQUIRED)
+  set(LIVOX_LIDAR_SDK_LIBRARY ${livox_sdk2_LIBRARIES})
+  set(LIVOX_LIDAR_SDK_INCLUDE_DIR ${livox_sdk2_INCLUDE_DIRS})
 
   ## PCL library
   link_directories(${PCL_LIBRARY_DIRS})
@@ -282,7 +280,7 @@ else(ROS_EDITION STREQUAL "ROS2")
     src/call_back/livox_lidar_callback.cpp
   )
 
-  target_include_directories(${PROJECT_NAME} PRIVATE ${livox_sdk_INCLUDE_DIRS})
+  target_include_directories(${PROJECT_NAME} PRIVATE ${livox_sdk2_INCLUDE_DIRS})
 
   # get include directories of custom msg headers
   if(HUMBLE_ROS STREQUAL "humble")
