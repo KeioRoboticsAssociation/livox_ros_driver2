@@ -43,7 +43,6 @@ livox_ros_driver2
     ├── driver_node.h
     ├── include
     │   ├── livox_ros_driver2.h
-    │   ├── ros1_headers.h
     │   ├── ros2_headers.h
     │   └── ros_headers.h
     ├── lddc.cpp
