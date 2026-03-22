@@ -1,6 +1,6 @@
 # Livox ROS Driver 2
 
-Livox ROS Driver 2 is the 2nd-generation driver package used to connect LiDAR products produced by Livox, applicable for ROS (noetic recommended) and ROS2 (foxy or humble recommended).
+Livox ROS Driver 2 is the 2nd-generation driver package used to connect LiDAR products produced by Livox. This fork is maintained for ROS2 only (Humble / Jazzy).
 
   **Note :**
 
@@ -10,29 +10,22 @@ Livox ROS Driver 2 is the 2nd-generation driver package used to connect LiDAR pr
 
 ### 1.1 OS requirements
 
-  * Ubuntu 18.04 for ROS Melodic;
-  * Ubuntu 20.04 for ROS Noetic and ROS2 Foxy;
   * Ubuntu 22.04 for ROS2 Humble;
+  * Ubuntu 24.04 for ROS2 Jazzy;
 
   **Tips:**
 
   Colcon is a build tool used in ROS2.
 
-  How to install colcon: [Colcon installation instructions](https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html)
+  How to install colcon: [Colcon installation instructions](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html)
 
-### 1.2 Install ROS & ROS2
-
-For ROS Melodic installation, please refer to:
-[ROS Melodic installation instructions](https://wiki.ros.org/melodic/Installation)
-
-For ROS Noetic installation, please refer to:
-[ROS Noetic installation instructions](https://wiki.ros.org/noetic/Installation)
-
-For ROS2 Foxy installation, please refer to:
-[ROS Foxy installation instructions](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
+### 1.2 Install ROS2
 
 For ROS2 Humble installation, please refer to:
 [ROS Humble installation instructions](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
+
+For ROS2 Jazzy installation, please refer to:
+[ROS Jazzy installation instructions](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
 
 Desktop-Full installation is recommend.
 
@@ -56,43 +49,21 @@ git clone https://github.com/Livox-SDK/livox_ros_driver2.git ws_livox/src/livox_
 
 ### 2.3 Build the Livox ROS Driver 2:
 
-#### For ROS (take Noetic as an example):
-```shell
-source /opt/ros/noetic/setup.sh
-./build.sh ROS1
-```
-
-#### For ROS2 Foxy:
-```shell
-source /opt/ros/foxy/setup.sh
-./build.sh ROS2
-```
-
 #### For ROS2 Humble:
 ```shell
 source /opt/ros/humble/setup.sh
-./build.sh humble
+cd ../..
+colcon build --symlink-install
+```
+
+#### For ROS2 Jazzy:
+```shell
+source /opt/ros/jazzy/setup.sh
+cd ../..
+colcon build --symlink-install
 ```
 
 ### 2.4 Run Livox ROS Driver 2:
-
-#### For ROS:
-
-```shell
-source ../../devel/setup.sh
-roslaunch livox_ros_driver2 [launch file]
-```
-
-in which,  
-
-* **livox_ros_driver2** : is the ROS package name of Livox ROS Driver 2;
-* **[launch file]** : is the ROS launch file you want to use; the 'launch_ROS1' folder contains several launch samples for your reference;  
-
-An rviz launch example for HAP LiDAR would be:
-
-```shell
-roslaunch livox_ros_driver2 rviz_HAP.launch
-```
 
 #### For ROS2:
 ```shell
@@ -114,7 +85,7 @@ ros2 launch livox_ros_driver2 rviz_HAP_launch.py
 
 ### 3.1 Launch file configuration instructions
 
-Launch files of ROS are in the "ws_livox/src/livox_ros_driver2/launch_ROS1" directory and launch files of ROS2 are in the "ws_livox/src/livox_ros_driver2/launch_ROS2" directory. Different launch files have different configuration parameter values and are used in different scenarios:
+Launch files are in the "ws_livox/src/livox_ros_driver2/launch_ROS2" directory. Different launch files have different configuration parameter values and are used in different scenarios:
 
 | launch file name          | Description                                                  |
 | ------------------------- | ------------------------------------------------------------ |
@@ -179,7 +150,7 @@ uint8   tag             # livox tag
 uint8   line            # laser number in lidar
 ```
 
-3. The standard pointcloud2 (pcl :: PointXYZI) format in the PCL library (only ROS can publish):
+3. The standard pointcloud2 (pcl :: PointXYZI) format in the PCL library:
 
 &ensp;&ensp;&ensp;&ensp;Please refer to the pcl :: PointXYZI data structure in the point_types.hpp file of the PCL library.
 
@@ -455,7 +426,7 @@ For more infomation about the HAP config, please refer to:
 
     <group if="$(arg rviz_enable)">
         <node name="livox_rviz" pkg="rviz" type="rviz" respawn="true"
-                args="-d $(find livox_ros_driver2)/config/display_point_cloud_ROS1.rviz"/>
+                args="-d $(find livox_ros_driver2)/config/display_point_cloud_ROS2.rviz"/>
     </group>
 
     <group if="$(arg rosbag_enable)">
@@ -502,7 +473,7 @@ For more infomation about the HAP config, please refer to:
 
     <group if="$(arg rviz_enable)">
         <node name="livox_rviz" pkg="rviz" type="rviz" respawn="true"
-                args="-d $(find livox_ros_driver2)/config/display_point_cloud_ROS1.rviz"/>
+                args="-d $(find livox_ros_driver2)/config/display_point_cloud_ROS2.rviz"/>
     </group>
 
     <group if="$(arg rosbag_enable)">
