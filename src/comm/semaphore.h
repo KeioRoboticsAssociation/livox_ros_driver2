@@ -35,10 +35,9 @@ class Semaphore {
   explicit Semaphore(int count = 0) : count_(count) {
   }
   void Signal();
+  void SignalIfNotPositive();
   void Wait();
-  int GetCount() {
-    return count_;
-  }
+  int GetCount();
 
  private:
   std::mutex mutex_;

@@ -34,6 +34,7 @@
 #include <memory>
 #include <mutex>              // std::mutex
 #include <thread>
+#include <cstddef>
 
 #include "livox_lidar_def.h"
 #include "livox_lidar_api.h"
@@ -117,6 +118,8 @@ class PubHandler {
   PointFrame frame_;
 
   std::deque<RawPacket> raw_packet_queue_;
+  const size_t max_raw_packet_queue_size_ = 8192;
+  std::atomic<uint64_t> raw_packet_drop_count_{0};
 
   //pub config
   uint64_t publish_interval_ = 100000000; //100 ms

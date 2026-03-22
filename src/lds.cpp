@@ -116,9 +116,7 @@ void Lds::StorageImuData(ImuData* imu_data) {
   LidarImuDataQueue* imu_queue = &p_lidar->imu_data;
   imu_queue->Push(imu_data);
   if (!imu_queue->Empty()) {
-    if (imu_semaphore_.GetCount() <= 0) {
-      imu_semaphore_.Signal();
-    }
+    imu_semaphore_.SignalIfNotPositive();
   }
 }
 
@@ -184,14 +182,13 @@ void Lds::PushLidarData(PointPacket* lidar_data, const uint8_t index, const uint
   if (!QueueIsFull(queue)) {
     QueuePushAny(queue, (uint8_t *)lidar_data, base_time);
     if (!QueueIsEmpty(queue)) {
-      if (pcd_semaphore_.GetCount() <= 0) {
-        pcd_semaphore_.Signal();
-      }
+      pcd_semaphore_.SignalIfNotPositive();
     }
   } else {
-    if (pcd_semaphore_.GetCount() <= 0) {
-        pcd_semaphore_.Signal();
-    }
+    // Keep stream fresh under overload by discarding the oldest packet.
+    QueuePopUpdate(queue);
+    QueuePushAny(queue, (uint8_t *)lidar_data, base_time);
+    pcd_semaphore_.SignalIfNotPositive();
   }
 }
 

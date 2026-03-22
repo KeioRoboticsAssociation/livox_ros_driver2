@@ -146,6 +146,14 @@ void PubHandler::OnLivoxLidarPointCloudCallback(uint32_t handle, const uint8_t d
   packet.raw_data.insert(packet.raw_data.end(), data->data, data->data + length);
   {
     std::unique_lock<std::mutex> lock(self->packet_mutex_);
+    if (self->raw_packet_queue_.size() >= self->max_raw_packet_queue_size_) {
+      self->raw_packet_queue_.pop_front();
+      uint64_t dropped = ++self->raw_packet_drop_count_;
+      if ((dropped % 2000) == 0) {
+        std::cout << "warning: raw packet queue overload, dropped " << dropped
+                  << " packets in total" << std::endl;
+      }
+    }
     self->raw_packet_queue_.push_back(packet);
   }
     self->packet_condition_.notify_one();

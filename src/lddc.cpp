@@ -391,14 +391,15 @@ void Lddc::PublishImuData(LidarImuDataQueue& imu_data_queue, const uint8_t index
 
 std::shared_ptr<rclcpp::PublisherBase> Lddc::CreatePublisher(uint8_t msg_type,
     std::string &topic_name, uint32_t queue_size) {
+    auto sensor_qos = rclcpp::QoS(rclcpp::KeepLast(queue_size)).best_effort().durability_volatile();
     if (kPointCloud2Msg == msg_type) {
       DRIVER_INFO(*cur_node_,
           "%s publish use PointCloud2 format", topic_name.c_str());
-      return cur_node_->create_publisher<PointCloud2>(topic_name, queue_size);
+      return cur_node_->create_publisher<PointCloud2>(topic_name, sensor_qos);
     } else if (kLivoxCustomMsg == msg_type) {
       DRIVER_INFO(*cur_node_,
           "%s publish use livox custom format", topic_name.c_str());
-      return cur_node_->create_publisher<CustomMsg>(topic_name, queue_size);
+      return cur_node_->create_publisher<CustomMsg>(topic_name, sensor_qos);
     }
 #if 0
     else if (kPclPxyziMsg == msg_type)  {
@@ -410,8 +411,7 @@ std::shared_ptr<rclcpp::PublisherBase> Lddc::CreatePublisher(uint8_t msg_type,
     else if (kLivoxImuMsg == msg_type)  {
       DRIVER_INFO(*cur_node_,
           "%s publish use imu format", topic_name.c_str());
-      return cur_node_->create_publisher<ImuMsg>(topic_name,
-          queue_size);
+      return cur_node_->create_publisher<ImuMsg>(topic_name, sensor_qos);
     } else {
       PublisherPtr null_publisher(nullptr);
       return null_publisher;

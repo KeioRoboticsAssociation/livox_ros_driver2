@@ -26,6 +26,10 @@
 
 namespace livox_ros {
 
+namespace {
+constexpr size_t kMaxImuQueueSize = 4096;
+}
+
 void LidarImuDataQueue::Push(ImuData* imu_data) {
   ImuData data;
   data.lidar_type = imu_data->lidar_type;
@@ -41,6 +45,9 @@ void LidarImuDataQueue::Push(ImuData* imu_data) {
   data.acc_z = imu_data->acc_z;
 
   std::lock_guard<std::mutex> lock(mutex_);
+  if (imu_data_queue_.size() >= kMaxImuQueueSize) {
+    imu_data_queue_.pop_front();
+  }
   imu_data_queue_.push_back(std::move(data));
 }
 

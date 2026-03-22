@@ -32,10 +32,23 @@ void Semaphore::Signal() {
   cv_.notify_one();
 }
 
+void Semaphore::SignalIfNotPositive() {
+  std::unique_lock<std::mutex> lock(mutex_);
+  if (count_ <= 0) {
+    ++count_;
+    cv_.notify_one();
+  }
+}
+
 void Semaphore::Wait() {
   std::unique_lock<std::mutex> lock(mutex_);
   cv_.wait(lock, [=] { return count_ > 0; });
   --count_;
+}
+
+int Semaphore::GetCount() {
+  std::unique_lock<std::mutex> lock(mutex_);
+  return count_;
 }
 
 } // namespace livox_ros
